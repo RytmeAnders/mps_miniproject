@@ -1835,7 +1835,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4749351841315700, guid: d3a94b583c03f734288546bf3abbbf7c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 4749351841315700, guid: d3a94b583c03f734288546bf3abbbf7c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1901,24 +1901,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd3b5e588e092144ba2e547d724ad9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravityCoeff: 9.8
+  aircraftHeight: 1
 --- !u!4 &1357265504 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4749351841315700, guid: d3a94b583c03f734288546bf3abbbf7c,
     type: 3}
   m_PrefabInstance: {fileID: 1357265501}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1357265505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1357265502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4dd3b5e588e092144ba2e547d724ad9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &1357265506
 Rigidbody:
   m_ObjectHideFlags: 0
