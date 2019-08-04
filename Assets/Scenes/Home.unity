@@ -1901,8 +1901,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd3b5e588e092144ba2e547d724ad9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravityCoeff: 9.8
+  g: 9.8
   aircraftHeight: 1
+  mass: 1
 --- !u!4 &1357265504 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4749351841315700, guid: d3a94b583c03f734288546bf3abbbf7c,
