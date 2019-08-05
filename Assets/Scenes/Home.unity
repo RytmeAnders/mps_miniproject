@@ -1904,6 +1904,8 @@ MonoBehaviour:
   g: 9.8
   aircraftHeight: 1
   mass: 1
+  acceleration: 0.1
+  deceleration: 0.05
 --- !u!4 &1357265504 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4749351841315700, guid: d3a94b583c03f734288546bf3abbbf7c,

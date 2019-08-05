@@ -4,19 +4,31 @@ using UnityEngine;
 
 public class Flight : MonoBehaviour
 {
-    // TODO Introduce proper bounce in the plane (right now it just stops on the ground)
+    /* TODO:
+        - Introduce proper bounce in the plane (right now it just stops on the ground)
+        - Create controls for pitch (for aoa)
+        - Allow plane to rotate
+    */
 
     // Public variables
     public float g = 9.8f;
     public float aircraftHeight = 1;
     public float mass = 1;
 
+    [Range(0,1)]
+    public float acceleration;
+
+    [Range(0,1)]
+    public float deceleration;
+
     // Private variables
     Vector3 F_drag, F_thrust, F_gravity, F_lift, F_final; //(F = force)
     Rigidbody rb;
+    float speed;
 
     void Start()
     {
+        speed = 0;
         rb = GetComponent<Rigidbody>();
     }
 
@@ -29,6 +41,7 @@ public class Flight : MonoBehaviour
         // Add this final vector3 to the plane
         // TODO Scale forces by 1/m to get acceleration (Verth and Bishop, 2008: p.606)
         rb.velocity = F_final;
+        print(speed);
     }
 
     //Forward force
@@ -39,15 +52,31 @@ public class Flight : MonoBehaviour
     /// <returns></returns>
     Vector3 CalculateThrust()
     {
-        F_thrust = Vector3.forward; //Testing forward motion
+        // Speed up if key is down
+        if(Input.GetKey(KeyCode.W))
+        {
+            speed += acceleration;
+        }
+
+        // Slow down if no button is held
+        if(!Input.GetKey(KeyCode.W))
+        {
+            if(speed > 0)
+            {
+                speed -= deceleration;
+            }
+        }
+
+        // At the moment our plane can only fly straight ahead
+        F_thrust = Vector3.forward * speed;
         return F_thrust;
     }
 
     //Backwards force
     /// <summary>
-    /// Fdrag = −mρv (book p.607), proportional but opposite force to thrust.
-    /// m = mass,
-    /// p = drag magnitude,
+    /// Fdrag = 1/2 * rho * Cd * v^2
+    /// rho = air density,
+    /// Cd = drag coefficient (exponential aoa),
     /// v = velocity of aircraft (thrust).
     /// - Parallel to velocity
     /// </summary>
@@ -78,7 +107,7 @@ public class Flight : MonoBehaviour
     /// <summary>
     /// L = 1/2 * rho * Cl * v^2. Depends on thrust and angle of attack.
     /// rho = air density,
-    /// Cl = lift coefficient (aoa dependent),
+    /// Cl = lift coefficient (linear aoa between 0-15 degrees),
     /// v^2 = speed (velocity?) of aircraft (thrust).
     /// - Perpendicular to velocity.
     /// </summary>
