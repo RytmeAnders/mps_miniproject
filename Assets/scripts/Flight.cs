@@ -97,6 +97,10 @@ public class Flight : MonoBehaviour
     /// <returns></returns>
     Vector3 CalculateDrag()
     {
+        F_drag = new Vector3(0,0,1);
+        float D = 0.5f * rho * Cl * Mathf.Pow(speed,2);
+        F_drag = -Vector3.forward * D * Time.deltaTime;
+
         return F_drag;
     }
 
@@ -156,7 +160,6 @@ public class Flight : MonoBehaviour
     {
         float aoa = Mathf.Acos(Vector3.Dot(Vector3.forward,-transform.right)) * Mathf.Rad2Deg - 1;
         Cl = 2 * m * (aoa-1);
-        print(aoa-1);
         return Cl;
     }
     #endregion
