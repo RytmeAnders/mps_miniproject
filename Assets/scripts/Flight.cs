@@ -13,37 +13,54 @@ public class Flight : MonoBehaviour
     // Public variables
     public float g = 9.8f;
     public float aircraftHeight = 1;
-    public float mass = 1;
-
+    public float maxSpeed;
+    public float pitchStrength = 0.1f;
     [Range(0,1)]
     public float acceleration;
-
     [Range(0,1)]
     public float deceleration;
 
+    public Vector3 F_drag;
+    public Vector3 F_thrust;
+    public Vector3 F_gravity;
+    public Vector3 F_lift;
+    public Vector3 F_final;
+
     // Private variables
-    Vector3 F_drag, F_thrust, F_gravity, F_lift, F_final; //(F = force)
     Rigidbody rb;
     float speed;
+    float Cl;
+    float pitch;
+    float mass;
+    float m;
+
+    // Constants
+    const float rho = 1.225f; //Standard air pressure at sea level
 
     void Start()
     {
-        speed = 0;
         rb = GetComponent<Rigidbody>();
+        pitch = -1;
+        speed = 0;
+        mass = rb.mass;
+        m = 0.1f;
     }
 
     // No need for "+=" when using rigidbody velocity instead of transform.position
     void Update()
     {
+        ControlPitch();
+        CalculateAngleOfAttack();
+        
         // Get final vector3 combining all 4 forces
         F_final = CalculateThrust() + CalculateDrag() + CalculateGravity() + CalculateLift();
 
         // Add this final vector3 to the plane
         // TODO Scale forces by 1/m to get acceleration (Verth and Bishop, 2008: p.606)
         rb.velocity = F_final;
-        print(speed);
     }
 
+    #region Forces
     //Forward force
     /// <summary>
     /// Seems to be an arbitrary vector given to the aircraft.
@@ -59,12 +76,9 @@ public class Flight : MonoBehaviour
         }
 
         // Slow down if no button is held
-        if(!Input.GetKey(KeyCode.W))
+        if(!Input.GetKey(KeyCode.W) && speed > 0)
         {
-            if(speed > 0)
-            {
-                speed -= deceleration;
-            }
+            speed -= deceleration;
         }
 
         // At the moment our plane can only fly straight ahead
@@ -114,6 +128,36 @@ public class Flight : MonoBehaviour
     /// <returns></returns>
     Vector3 CalculateLift()
     {
+        F_lift = new Vector3(0,1,0);
+        float L = 0.5f * rho * Cl * Mathf.Pow(speed,2);
+        F_lift.y += L * Time.deltaTime;
         return F_lift;
     }
+    #endregion
+
+    #region Flight Control
+    void ControlPitch()
+    {
+        // Pitch up
+        if(Input.GetKey(KeyCode.E))
+        {
+            pitch -= pitchStrength;
+        }
+
+        // Pitch down
+        if(Input.GetKey(KeyCode.Q))
+        {
+            pitch += pitchStrength;
+        }
+        transform.eulerAngles = new Vector3(0,90,pitch); //y needs to be 90 to have it properly rotated in world space
+    }
+
+    float CalculateAngleOfAttack()
+    {
+        float aoa = Mathf.Acos(Vector3.Dot(Vector3.forward,-transform.right)) * Mathf.Rad2Deg - 1;
+        Cl = 2 * m * (aoa-1);
+        print(aoa-1);
+        return Cl;
+    }
+    #endregion
 }
