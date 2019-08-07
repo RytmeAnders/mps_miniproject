@@ -8064,7 +8064,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4749351841315700, guid: d3a94b583c03f734288546bf3abbbf7c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -496.4
+      value: -488.75
       objectReference: {fileID: 0}
     - target: {fileID: 4749351841315700, guid: d3a94b583c03f734288546bf3abbbf7c, type: 3}
       propertyPath: m_LocalRotation.x
@@ -8201,7 +8201,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1357265502}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dd3b5e588e092144ba2e547d724ad9e, type: 3}
   m_Name: 
@@ -8210,6 +8210,7 @@ MonoBehaviour:
   maxSpeed: 50
   stall: 15
   pitchStrength: 0.1
+  rollStrength: 0.1
   acceleration: 0.1
   deceleration: 0.05
   F_drag: {x: 0, y: 0, z: 0}
@@ -8230,7 +8231,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1357265502}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a12c43c231185ee40964fa700016d3a0, type: 3}
   m_Name: 
@@ -8250,7 +8251,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1357265502}
   serializedVersion: 2
-  m_Mass: 250
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0

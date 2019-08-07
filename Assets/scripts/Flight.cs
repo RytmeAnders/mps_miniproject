@@ -19,6 +19,8 @@ public class Flight : MonoBehaviour
     [Range(0,1)]
     public float pitchStrength;
     [Range(0,1)]
+    public float rollStrength;
+    [Range(0,1)]
     public float acceleration;
     [Range(0,1)]
     public float deceleration;
@@ -37,6 +39,7 @@ public class Flight : MonoBehaviour
     float pitch;
     float mass;
     float m;
+    float roll;
 
     // Constants
     const float rho = 1.225f; //Standard air pressure at sea level
@@ -47,6 +50,7 @@ public class Flight : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         pitch = -1;
         speed = 0;
+        roll = 0;
         mass = rb.mass;
         m = 0.05f;
     }
@@ -55,6 +59,7 @@ public class Flight : MonoBehaviour
     void Update()
     {
         ControlPitch();
+        ControlRoll();
         CalculateAngleOfAttack();
         
         // Get final vector3 combining all 4 forces
@@ -169,17 +174,38 @@ public class Flight : MonoBehaviour
         {
             pitch += pitchStrength;
         }
-        transform.eulerAngles = new Vector3(pitch,0,0); //y needs to be 90 to have it properly rotated in world space
+        transform.eulerAngles = new Vector3(pitch,-roll,roll);
+    }
+
+    void ControlRoll()
+    {
+        // Pitch up
+        if(Input.GetKey(KeyCode.D))
+        {
+            roll -= rollStrength;
+        }
+
+        // Pitch down
+        if(Input.GetKey(KeyCode.A))
+        {
+            roll += rollStrength;
+        }
+        transform.eulerAngles = new Vector3(pitch,-roll,roll);
     }
 
     float CalculateAngleOfAttack()
     {
         Vector3 normalVelocity = F_final.normalized;
-        float aoa = Mathf.Acos(Vector3.Dot(Vector3.forward,transform.forward)) * Mathf.Rad2Deg - 1;
+        Vector3 flatForward = transform.forward;
+        flatForward.y = 0;
+        float aoa = Mathf.Acos(Vector3.Dot(flatForward,transform.forward)) * Mathf.Rad2Deg - 1;
+
+        Debug.DrawRay(transform.position,flatForward*100,Color.red);
+        Debug.DrawRay(transform.position,transform.forward*100,Color.green);
         
         // I propose that there is zero lift parallel to the ground
         Cl = 2 * m * (aoa-Vector3.forward.z);
-        print(Cl);
+        print(aoa);
         return Cl;
 
         /*F_lift = F_lift.normalized;
