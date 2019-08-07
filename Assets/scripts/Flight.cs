@@ -6,19 +6,19 @@ public class Flight : MonoBehaviour
 {
     /* TODO:
         - Introduce proper bounce in the plane (right now it just stops on the ground)
-        - Create controls for pitch (for aoa)
         - Allow plane to rotate
     */
 
     // Public variables
-    public float g = 9.8f;
     public float aircraftHeight = 1;
     public float maxSpeed;
-    public float pitchStrength = 0.1f;
+    [Range(0,1)]
+    public float pitchStrength;
     [Range(0,1)]
     public float acceleration;
     [Range(0,1)]
     public float deceleration;
+    public float stall;
 
     public Vector3 F_drag;
     public Vector3 F_thrust;
@@ -36,6 +36,7 @@ public class Flight : MonoBehaviour
 
     // Constants
     const float rho = 1.225f; //Standard air pressure at sea level
+    const float g = 9.8f; //Gravity in newton on earth
 
     void Start()
     {
@@ -58,6 +59,7 @@ public class Flight : MonoBehaviour
         // Add this final vector3 to the plane
         // TODO Scale forces by 1/m to get acceleration (Verth and Bishop, 2008: p.606)
         rb.velocity = F_final;
+        print(pitch);
     }
 
     #region Forces
@@ -82,7 +84,7 @@ public class Flight : MonoBehaviour
         }
 
         // At the moment our plane can only fly straight ahead
-        F_thrust = Vector3.forward * speed;
+        F_thrust = transform.forward * speed;
         return F_thrust;
     }
 
@@ -99,7 +101,12 @@ public class Flight : MonoBehaviour
     {
         F_drag = new Vector3(0,0,1);
         float D = 0.5f * rho * Cl * Mathf.Pow(speed,2);
-        F_drag = -Vector3.forward * D * Time.deltaTime;
+        F_drag = -transform.forward * D * Time.deltaTime;
+
+        if(-F_drag.z > F_thrust.z)
+        {
+            F_drag.z = -F_thrust.z;
+        }
 
         return F_drag;
     }
@@ -117,7 +124,8 @@ public class Flight : MonoBehaviour
             return F_gravity;
         }
 
-        F_gravity.y = 0;
+        //Stop gravity if on ground
+        F_gravity = new Vector3(0,0,0);
         return F_gravity;
     }
 
@@ -135,6 +143,11 @@ public class Flight : MonoBehaviour
         F_lift = new Vector3(0,1,0);
         float L = 0.5f * rho * Cl * Mathf.Pow(speed,2);
         F_lift.y += L * Time.deltaTime;
+
+        if(pitch <= -stall)
+        {
+            F_lift = new Vector3(0,0,0);
+        }
         return F_lift;
     }
     #endregion
@@ -153,12 +166,12 @@ public class Flight : MonoBehaviour
         {
             pitch += pitchStrength;
         }
-        transform.eulerAngles = new Vector3(0,90,pitch); //y needs to be 90 to have it properly rotated in world space
+        transform.eulerAngles = new Vector3(pitch,0,0); //y needs to be 90 to have it properly rotated in world space
     }
 
     float CalculateAngleOfAttack()
     {
-        float aoa = Mathf.Acos(Vector3.Dot(Vector3.forward,-transform.right)) * Mathf.Rad2Deg - 1;
+        float aoa = Mathf.Acos(Vector3.Dot(Vector3.forward,transform.forward)) * Mathf.Rad2Deg - 1;
         Cl = 2 * m * (aoa-1);
         return Cl;
     }
