@@ -8060,11 +8060,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4749351841315700, guid: d3a94b583c03f734288546bf3abbbf7c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4749351841315700, guid: d3a94b583c03f734288546bf3abbbf7c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -200
+      value: -496.4
       objectReference: {fileID: 0}
     - target: {fileID: 4749351841315700, guid: d3a94b583c03f734288546bf3abbbf7c, type: 3}
       propertyPath: m_LocalRotation.x
@@ -8201,17 +8201,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1357265502}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dd3b5e588e092144ba2e547d724ad9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   aircraftHeight: 1
   maxSpeed: 50
+  stall: 15
   pitchStrength: 0.1
   acceleration: 0.1
   deceleration: 0.05
-  stall: 15
   F_drag: {x: 0, y: 0, z: 0}
   F_thrust: {x: 0, y: 0, z: 0}
   F_gravity: {x: 0, y: 0, z: 0}
@@ -8223,6 +8223,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1357265501}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1357265505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357265502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a12c43c231185ee40964fa700016d3a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 6000
+  torque: 100
+  m: 0.5
+  F_Lift: {x: 0, y: 0, z: 0}
+  F_Drag: {x: 0, y: 0, z: 0}
+  LiftMag: 0
+  DragMag: 0
 --- !u!54 &1357265506
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8231,7 +8250,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1357265502}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 250
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
@@ -8239,6 +8258,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &1357265507
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1357265502}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99721146, y: 1.4669976, z: 5.5464325}
+  m_Center: {x: -0.30830586, y: -0.23349881, z: -0.91399384}
 --- !u!1 &1394575272
 GameObject:
   m_ObjectHideFlags: 0

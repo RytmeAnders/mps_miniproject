@@ -63,7 +63,6 @@ public class Flight : MonoBehaviour
         // Add this final vector3 to the plane
         // TODO Scale forces by 1/m to get acceleration (Verth and Bishop, 2008: p.606)
         rb.velocity = F_final;
-        print(pitch);
     }
 
     #region Forces
@@ -104,7 +103,7 @@ public class Flight : MonoBehaviour
     Vector3 CalculateDrag()
     {
         F_drag = new Vector3(0,0,1);
-        float D = 0.5f * rho * Cl * Mathf.Pow(speed,2);
+        float D = 0.5f * rho * CalculateAngleOfAttack() * Mathf.Pow(speed,2);
         F_drag = -transform.forward * D * Time.deltaTime;
 
         if(-F_drag.z > F_thrust.z)
@@ -145,7 +144,7 @@ public class Flight : MonoBehaviour
     Vector3 CalculateLift()
     {
         F_lift = new Vector3(0,1,0);
-        float L = 0.5f * rho * Cl * Mathf.Pow(speed,2);
+        float L = 0.5f * rho * CalculateAngleOfAttack() * Mathf.Pow(speed,2);
         F_lift.y += L * Time.deltaTime;
 
         if(pitch <= -stall)
@@ -175,9 +174,20 @@ public class Flight : MonoBehaviour
 
     float CalculateAngleOfAttack()
     {
+        Vector3 normalVelocity = F_final.normalized;
         float aoa = Mathf.Acos(Vector3.Dot(Vector3.forward,transform.forward)) * Mathf.Rad2Deg - 1;
-        Cl = 2 * m * (aoa-1);
+        
+        // I propose that there is zero lift parallel to the ground
+        Cl = 2 * m * (aoa-Vector3.forward.z);
+        print(Cl);
         return Cl;
+
+        /*F_lift = F_lift.normalized;
+        F_final = F_final.normalized;
+        float aoa = Mathf.Acos(Vector3.Dot(F_lift,F_final)) * Mathf.Rad2Deg;
+        Cl = 2 * m * (aoa-1);
+        print(aoa);
+        return Cl;*/
     }
     #endregion
 }
