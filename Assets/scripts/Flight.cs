@@ -10,16 +10,20 @@ public class Flight : MonoBehaviour
     */
 
     // Public variables
+    [Header("Aircraft parameters")]
     public float aircraftHeight = 1;
     public float maxSpeed;
+    public float stall;
+
+    [Header("Aircraft controls")]
     [Range(0,1)]
     public float pitchStrength;
     [Range(0,1)]
     public float acceleration;
     [Range(0,1)]
     public float deceleration;
-    public float stall;
 
+    [Header("Velocities")]
     public Vector3 F_drag;
     public Vector3 F_thrust;
     public Vector3 F_gravity;
@@ -44,7 +48,7 @@ public class Flight : MonoBehaviour
         pitch = -1;
         speed = 0;
         mass = rb.mass;
-        m = 0.1f;
+        m = 0.05f;
     }
 
     // No need for "+=" when using rigidbody velocity instead of transform.position
