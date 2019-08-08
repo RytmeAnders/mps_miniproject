@@ -6,7 +6,7 @@ public class Flight : MonoBehaviour
 {
     /* TODO:
         - Introduce proper bounce in the plane (right now it just stops on the ground)
-        - Allow plane to rotate
+        - Determine the correct zero lift angle
     */
 
     // Public variables
@@ -96,29 +96,6 @@ public class Flight : MonoBehaviour
         return F_thrust;
     }
 
-    //Backwards force
-    /// <summary>
-    /// Fdrag = 1/2 * rho * Cd * v^2
-    /// rho = air density,
-    /// Cd = drag coefficient (exponential aoa),
-    /// v = velocity of aircraft (thrust).
-    /// - Parallel to velocity
-    /// </summary>
-    /// <returns></returns>
-    Vector3 CalculateDrag()
-    {
-        F_drag = new Vector3(0,0,1);
-        float D = 0.5f * rho * CalculateAngleOfAttack() * Mathf.Pow(speed,2);
-        F_drag = -transform.forward * D * Time.deltaTime;
-
-        if(-F_drag.z > F_thrust.z)
-        {
-            F_drag.z = -F_thrust.z;
-        }
-
-        return F_drag;
-    }
-
     // Downwards force
     /// <summary>
     /// Gravity force = mg. Acts as an acceleration downwards.
@@ -158,6 +135,30 @@ public class Flight : MonoBehaviour
         }
         return F_lift;
     }
+
+    //Backwards force
+    /// <summary>
+    /// Fdrag = 1/2 * rho * Cd * v^2
+    /// rho = air density,
+    /// Cd = drag coefficient (exponential aoa),
+    /// v = velocity of aircraft (thrust).
+    /// - Parallel to velocity
+    /// </summary>
+    /// <returns></returns>
+    Vector3 CalculateDrag()
+    {
+        F_drag = new Vector3(0,0,1);
+        float D = 0.5f * rho * CalculateAngleOfAttack() * Mathf.Pow(speed,2);
+        F_drag = -transform.forward * D * Time.deltaTime;
+
+        if(-F_drag.z > F_thrust.z)
+        {
+            F_drag.z = -F_thrust.z;
+        }
+
+        return F_drag;
+    }
+
     #endregion
 
     #region Flight Control
@@ -174,7 +175,7 @@ public class Flight : MonoBehaviour
         {
             pitch += pitchStrength;
         }
-        transform.eulerAngles = new Vector3(pitch,-roll,roll);
+        transform.eulerAngles = new Vector3(pitch,-roll,roll*2);
     }
 
     void ControlRoll()
@@ -190,7 +191,7 @@ public class Flight : MonoBehaviour
         {
             roll += rollStrength;
         }
-        transform.eulerAngles = new Vector3(pitch,-roll,roll);
+        transform.eulerAngles = new Vector3(pitch,-roll,roll*2);
     }
 
     float CalculateAngleOfAttack()
@@ -207,13 +208,6 @@ public class Flight : MonoBehaviour
         Cl = 2 * m * (aoa-Vector3.forward.z);
         print(aoa);
         return Cl;
-
-        /*F_lift = F_lift.normalized;
-        F_final = F_final.normalized;
-        float aoa = Mathf.Acos(Vector3.Dot(F_lift,F_final)) * Mathf.Rad2Deg;
-        Cl = 2 * m * (aoa-1);
-        print(aoa);
-        return Cl;*/
     }
     #endregion
 }
